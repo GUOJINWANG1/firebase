@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+ /* 隐藏输入框 */
+ .hidden {
+     display: none;
+ }
+ /* 样式调整 */
+ #message {
+     margin-top: 20px;
+     color: green;
+ }
+ body {
+     font-family: Arial, sans-serif;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 100vh;
+     margin: 20;
+     background-color: #f0f4f8;
+     
+ }
+ .login-container {
+     width: 350px;
+     padding: 20px;
+     background-color: #ffffff;
+     border-radius: 10px;
+     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+     text-align: righ;
+ }
+ .login-container h1 {
+     margin-bottom: 30px;
+     color: #000;
+     font-size: 20px;
+     
+ }
+ .login-container input[type="text"],
+ .login-container input[type="email"],
+ .login-container input[type="password"] {
+     width: 95%;
+     padding: 10px;
+     margin: 10px 0;
+     border: 2px solid #000;
+     border-radius: 5px;
+     color: 000;
+ }
+ .login-container button {
+     width: 100%;
+     padding: 10px;
+     background-color: #007bff;
+     color: white;
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     font-size: 15px;
+ }
+ .login-container button:hover {
+     background-color: #0056b3;
+ }
+ .error-message {
+     color: red;
+     display: none;
+     margin-top: 10px;
+ }
+</style>
+</head>
+<body>
+<div class="login-container">
+
+
+<!-- 登录表单 -->
+<h2>Login</h2>
+
+<input type="email" id="loginEmail" placeholder="Email" required>
+<input type="password" id="loginPassword" placeholder="Password" required>
+<button id="loginBtn">Login</button>
+
+
+<h1>Create User</h1>
+<!-- 创建用户按钮 -->
+<button id="createUserBtn">Create User</button>
+<p class="error-message" id="error-message">Invalid username or password</p>
+<!-- 显示成功或错误信息 -->
+<div id="message" class="hidden"></div>
+<!-- 用户注册表单 -->
+<div id="registerForm" class="hidden">
+<h2>Register</h2>
+<input type="email" id="registerEmail" placeholder="Email" required>
+<input type="password" id="registerPassword" placeholder="Password" required>
+<button id="registerBtn">Register</button>
+</div>
+
+<script type="module">
+ // Import the functions you need from the SDKs you need
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+ import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+ // Your web app's Firebase configuration
+ const firebaseConfig = {
+    apiKey: "AIzaSyDACgpDZcWXmQVvm13OxXxdBGrwISJWqEo",
+    authDomain: "materials-420d0.firebaseapp.com",
+    databaseURL: "https://materials-420d0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "materials-420d0",
+    storageBucket: "materials-420d0.appspot.com",
+    messagingSenderId: "1023899248303",
+    appId: "1:1023899248303:web:d712f818c1aec95857165a",
+    measurementId: "G-JPR2F15NS1"
+ };
+ // Initialize Firebase
+ const app = initializeApp(firebaseConfig);
+ const analytics = getAnalytics(app);
+ const auth = getAuth();
+ const database = getDatabase(app);
+ // 显示注册表单
+ document.getElementById("createUserBtn").addEventListener("click", () => {
+     const registerForm = document.getElementById("registerForm");
+     registerForm.classList.toggle("hidden");
+ });
+ // 用户注册功能
+ document.getElementById("registerBtn").addEventListener("click", () => {
+     const email = document.getElementById("registerEmail").value;
+     const password = document.getElementById("registerPassword").value;
+     createUserWithEmailAndPassword(auth, email, password)
+         .then((userCredential) => {
+             console.log("User registered:", userCredential.user);
+             const dbRef = ref(database, `users/${userCredential.user.uid}/`);
+             set(dbRef, {
+                 email: email,
+                 registrationDate: new Date().toISOString()
+             }).then(() => {
+                 displayMessage("User registered successfully!");
+             }).catch((error) => {
+                 console.error("Error writing user data to database:", error);
+                 displayMessage("Error writing user data.");
+             });
+         })
+         .catch((error) => {
+             console.error("Error during registration:", error);
+             displayMessage("Error during registration: " + error.message);
+         });
+ });
+ // User login
+ document.getElementById("loginBtn").addEventListener("click", () => {
+     const email = document.getElementById("loginEmail").value;
+     const password = document.getElementById("loginPassword").value;
+     signInWithEmailAndPassword(auth, email, password)
+         .then((userCredential) => {
+             console.log("User logged in:", userCredential.user);
+             displayMessage("User logged in successfully!");
+             window.location.href = "https://guojinwang1.github.io/firebase/";
+         })
+         .catch((error) => {
+             console.error("Error during login:", error);
+             displayMessage("Error during login: " + error.message);
+         });
+ });
+ // 显示消息函数
+ function displayMessage(msg) {
+     const messageDiv = document.getElementById("message");
+     messageDiv.textContent = msg;
+     messageDiv.classList.remove("hidden");
+     setTimeout(() => {
+         messageDiv.classList.add("hidden");
+     }, 3000);
+ }
+</script>
+</body>
+</html>
