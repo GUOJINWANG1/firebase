@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Material Management System</title>
-<style>
-       body {
-           font-family: Arial, sans-serif;
-           background-color: #f4f4f9;
-           margin: 0;
-           padding: 0;
-           margin-left: 10px;
-           width: 100vw;
-           height: 80vh;
-       }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Management System</title>
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+           margin-left:10px;
+           width:100vw;
+           height:80vh;           
+         }
        .container {
-           display: grid;
-           grid-template-columns: 1fr 80%;
-           width: 100vw;
-           height: 90vh;
-           margin: 20px 0;
-           background-color: white;
-           border: 1px solid white;
-           overflow: auto;
-       }
-       h2 {
-           text-align: center;
-           color: #333;
-           grid-column: span 2;
-       }
-       form {
-           display: grid;
-           grid-template-columns: 1fr;
-           gap: 5px;
-           background-color: white;
-           padding: 20px;
-           border: 1px solid #ddd;
-           box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-           width: 400px;
-           min-height: 1000px;
-           border: 1px solid #000;
-           margin: 0 auto;
-       }
+      display: grid;
+     grid-template-columns: 1fr 80%;
+     width: 100%;
+     height: 90vh;
+     margin: 20px 0;
+     background-color: white;
+     border: 1px solid white;
+      overflow: auto;  /* 超出宽度时可滚动 */
+      }
+    h2 {
+            text-align: center;
+            color: #333;
+            grid-column: span 2;
+    }
+    form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 5px;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width:400px;
+            height:1000px auto;
+            border: 1px solid #000;
+             margin:0 auto;
+          
+        }
         form label {
             display: block;
             font-weight: bold;
@@ -235,7 +237,11 @@
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+<!-- Firebase Database SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
+<!-- Your web app's Firebase configuration -->
 <body>
     <div class="container">
      <h2>Material Management System</h2>
@@ -330,250 +336,202 @@
         <button onclick="confirmAction()">Yes</button>
         <button onclick="cancelAction()">No</button>
     </div>
+    
     <body>
-   <script type="module">
-   // Import the functions you need from the SDKs you need
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
-   import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-   import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-   // Your web app's Firebase configuration
-   const firebaseConfig = {
-       apiKey: "AIzaSyDACgpDZcWXmQVvm13OxXxdBGrwISJWqEo",
-       authDomain: "materials-420d0.firebaseapp.com",
-       databaseURL: "https://materials-420d0-default-rtdb.asia-southeast1.firebasedatabase.app",
-       projectId: "materials-420d0",
-       storageBucket: "materials-420d0.appspot.com",
-       messagingSenderId: "1023899248303",
-       appId: "1:1023899248303:web:d712f818c1aec95857165a",
-       measurementId: "G-JPR2F15NS1"
-   };
-   // Initialize Firebase
-   const app = initializeApp(firebaseConfig);
-   const analytics = getAnalytics(app);
-   // Initialize Firebase Auth and sign in anonymously
-   const auth = getAuth();
-   signInAnonymously(auth)
-       .then(() => {
-           console.log("Signed in anonymously");
-       })
-       .catch((error) => {
-           console.error("Error signing in anonymously:", error);
-       });
-   // Initialize Firebase Database
-   const database = getDatabase(app);
-   // Function to save product data to the database
-   function saveProductData() {
-       const productData = {
-           productID: "12345",
-           productType: "Sample Type",
-           quantity: 100,
-           expirationTime: "12/31/2024",
-           productBatchID: "Batch001",
-           username: "User123",
-           location: "Warehouse A",
-           addedDate: new Date().toISOString() // Current date and time
-       };
-       // Use productID as a unique key for each entry
-       const dbRef = ref(database, 'products/' + productData.productID);
-       set(dbRef, productData)
-           .then(() => {
-               console.log("Product data written to database successfully");
-           })
-           .catch((error) => {
-               console.error("Error writing product data to database:", error);
-           });
-   }
-   // Call the function to save data
-   saveProductData();
-</script>
-</body>
-</html>
     <script>
-      let products = JSON.parse(localStorage.getItem('products')) || [];
-      let selectedProducts = [];
-      let currentEditIndex = -1;
-      let currentPage = 1;
+       let products = JSON.parse(localStorage.getItem('products')) || [];
+let selectedProducts = [];
+let currentEditIndex = -1;
+let currentPage = 1;
 const itemsPerPage = 15;
+
 // 添加二维码输入框的事件处理
 document.getElementById("scanQR").addEventListener("input", handleQRInputWithDelay);
 document.getElementById("scanQR").addEventListener("keydown", function(event) {
-   if (event.key === "Enter") {
-       handleQRInput(); // 检测到 Enter 键时立即触发处理函数
-   }
+    if (event.key === "Enter") {
+        handleQRInput(); // 检测到 Enter 键时立即触发处理函数
+    }
 });
-         let qrInputTimeout;
-function handleQRInputWithDelay() {
-   document.getElementById("scanQR").readOnly = true; // 设置为只读
-   setTimeout(() => {
-       document.getElementById("scanQR").readOnly = false; // 恢复可写
-       handleQRInput();
-   }, 500); // 延迟500毫秒后触发
-}
-function handleQRInput() {
-   // 获取并清理扫描器输入的内容
-   let qrData = document.getElementById("scanQR").value.trim();
-   // 去除换行符和其他不可见字符
-   qrData = qrData.replace(/[\r\n]+/g, "").replace(/\s+/g, "");
-   if (!qrData) return;
-   
 
-  const parsedData = parseQRCode(qrData);
-   if (parsedData) {
-       document.getElementById("productID").value = parsedData.productID;
-       document.getElementById("productType").value = parsedData.productType;
-       document.getElementById("quantity").value = parsedData.quantity;
-       document.getElementById("productionTime").value = parsedData.productionTime;
-       document.getElementById("productBatchID").value = parsedData.productBatchID;
-       addProduct();
-       document.getElementById("scanQR").value = ""; // 清空 QR 输入框
-   }
+let qrInputTimeout;
+function handleQRInputWithDelay() {
+    clearTimeout(qrInputTimeout);
+    qrInputTimeout = setTimeout(handleQRInput, 200); // 延迟200毫秒处理输入内容
 }
+
+function handleQRInput() {
+    const qrData = document.getElementById("scanQR").value.trim();
+    if (!qrData) return;
+    
+    const parsedData = parseQRCode(qrData);
+    if (parsedData) {
+        document.getElementById("productID").value = parsedData.productID;
+        document.getElementById("productType").value = parsedData.productType;
+        document.getElementById("quantity").value = parsedData.quantity;
+        document.getElementById("productionTime").value = parsedData.productionTime;
+        document.getElementById("productBatchID").value = parsedData.productBatchID;
+        addProduct();
+        // 清空 QR 输入框
+        document.getElementById("scanQR").value = "";
+    }
+}
+
 // 解析二维码数据并验证格式
 function parseQRCode(qrData) {
-   console.log("Original QR Data:", qrData); // 输出原始数据，检查内容
-   const parts = qrData.split('|');
-   if (parts.length < 7) {
-       alert("Invalid QR code format.");
-       return null;
-   }
-   // 提取和清理数据，按段应用不同的去除前缀逻辑
-   let productType = parts[0].replace(/^P/, '');            // 第1段：去除 "P"
-   let supplierID = parts[1].replace(/^1P/, '');           // 第2段：去除 "1P"
-   let productBatchID = parts[2].replace(/^1T/, '');       // 第3段：去除 "1T"
-   let quantityStr = parts[3].replace(/^7Q/, '').replace('+EA', ''); // 第4段：去除 "7Q" 和 "+EA"
-   let quantity = parseInt(quantityStr, 10);
-   let productID = parts[4].replace(/^S/, '');             // 第5段：去除 "S"
-   let supplier = parts[5].replace(/^21P/, '');            // 第6段：去除 "21P"
-   let productionDateStr = parts[6].replace(/^9D/, '');    // 第7段：去除 "9D"
-   let productionTime = formatDate(productionDateStr);
-   console.log("Parsed Data:", { productType, supplierID, productBatchID, quantity, productID, supplier, productionTime });
-   if (isNaN(quantity) || !productionTime) {
-       alert("Invalid data in QR code.");
-       return null;
-   }
-   return {
-       productID,
-       productType,
-       quantity,
-       productionTime,
-       productBatchID
-   };
+    console.log("Original QR Data:", qrData); // 输出原始数据，检查内容
+    const parts = qrData.split('|');
+    if (parts.length < 5) {
+        alert("Invalid QR code format.");
+        return null;
+    }
+
+    // 提取和清理数据
+    let productType = parts[0].replace(/^P/, '');
+    let supplierID = parts[1].replace(/^1P/, '');
+    let productBatchID = parts[2].replace(/^1T/, '');
+    let quantityStr = parts[3].replace(/^7Q/, '').replace('+EA', '');
+    let quantity = parseInt(quantityStr, 10);
+    let productID = parts[4].replace(/^S/, '');
+    let supplier = parts[5].replace(/^21P/, '');
+    let productionDateStr = parts[6].replace(/^9D/, '');
+    let productionTime = formatDate(productionDateStr);
+    
+    console.log("Parsed Data:", { productType, supplierID, productBatchID, quantity, productID, supplier, productionTime });
+    
+    if (isNaN(quantity) || !productionTime) {
+        alert("Invalid data in QR code.");
+        return null;
+    }
+
+    return {
+        productID,
+        productType,
+        quantity,
+        productionTime,
+        productBatchID
+    };
 }
+
 // 格式化日期为 MM/DD/YYYY
 function formatDate(dateString) {
-   if (dateString.length !== 8) {
-       console.error("Invalid date format");
-       return null;
-   }
-   const year = dateString.substring(0, 4);
-   const month = dateString.substring(4, 6);
-   const day = dateString.substring(6, 8);
-   return `${month}/${day}/${year}`;
+    if (dateString.length !== 8) {
+        console.error("Invalid date format");
+        return null;
+    }
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(4, 6);
+    const day = dateString.substring(6, 8);
+    return `${month}/${day}/${year}`;
 }
+
 function addProduct() {
-   const productID = document.getElementById("productID").value.trim();
-   const productType = document.getElementById("productType").value.trim();
-   const quantity = parseInt(document.getElementById("quantity").value, 10);
-   const productionTime = document.getElementById("productionTime").value.trim();
-   const productBatchID = document.getElementById("productBatchID").value.trim();
-   const username = document.getElementById("username").value.trim();
-   const location = document.getElementById("location").value.trim();
-   const currentDate = new Date();
-   const addedDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
-   if (!productID || !productType || !productBatchID || !productionTime) {
-       alert("All required fields must be filled!");
-       return;
-   }
-   if (quantity < 1 || quantity > 50000) {
-       alert("Quantity must be between 1 and 50000.");
-       return;
-   }
-   // 计算过期日期
-   const prodDateParts = productionTime.split('/');
-   const prodDate = new Date(`${prodDateParts[2]}-${prodDateParts[0]}-${prodDateParts[1]}`);
-   if (isNaN(prodDate)) {
-       alert("Invalid production date.");
-       return;
-   }
-   const expirationDate = new Date(prodDate.setFullYear(prodDate.getFullYear() + 2));
-   const expirationTime = `${expirationDate.getMonth() + 1}/${expirationDate.getDate()}/${expirationDate.getFullYear()}`;
-   products.unshift({
-       productID,
-       productType,
-       quantity,
-       expirationTime,
-       productBatchID,
-       username,
-       location,
-       addedDate
-   });
-   updateProductList();
-   saveToLocalStorage();
-   clearFormFields();
+    const productID = document.getElementById("productID").value.trim();
+    const productType = document.getElementById("productType").value.trim();
+    const quantity = parseInt(document.getElementById("quantity").value, 10);
+    const productionTime = document.getElementById("productionTime").value.trim();
+    const productBatchID = document.getElementById("productBatchID").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const currentDate = new Date();
+    const addedDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+
+    if (!productID || !productType || !productBatchID || !productionTime) {
+        alert("All required fields must be filled!");
+        return;
+    }
+    if (quantity < 1 || quantity > 50000) {
+        alert("Quantity must be between 1 and 50000.");
+        return;
+    }
+
+    // 计算过期日期
+    const prodDateParts = productionTime.split('/');
+    const prodDate = new Date(`${prodDateParts[2]}-${prodDateParts[0]}-${prodDateParts[1]}`);
+    if (isNaN(prodDate)) {
+        alert("Invalid production date.");
+        return;
+    }
+    const expirationDate = new Date(prodDate.setFullYear(prodDate.getFullYear() + 2));
+    const expirationTime = `${expirationDate.getMonth() + 1}/${expirationDate.getDate()}/${expirationDate.getFullYear()}`;
+
+    products.unshift({
+        productID,
+        productType,
+        quantity,
+        expirationTime,
+        productBatchID,
+        username,
+        location,
+        addedDate
+    });
+    
+    updateProductList();
+    saveToLocalStorage();
+    clearFormFields();
 }
+
 // 清除表单字段
 function clearFormFields() {
-   document.getElementById("scanQR").value = "";
-   document.getElementById("productID").value = "";
-   document.getElementById("productType").value = "";
-   document.getElementById("quantity").value = "";
-   document.getElementById("productionTime").value = "";
-   document.getElementById("productBatchID").value = "";
+    document.getElementById("scanQR").value = "";
+    document.getElementById("productID").value = "";
+    document.getElementById("productType").value = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("productionTime").value = "";
+    document.getElementById("productBatchID").value = "";
 }
-// 保持输入框的焦点
-document.getElementById("scanQR").addEventListener("focusout", () => {
-   setTimeout(() => document.getElementById("scanQR").focus(), 0);
-});
 
 function updateProductList() {
-   const tbody = document.querySelector("#productList tbody");
-   tbody.innerHTML = "";
-   const filteredProducts = products.filter(filterProducts);
-   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-   currentPage = Math.min(currentPage, totalPages);
-   const start = (currentPage - 1) * itemsPerPage;
-   const end = start + itemsPerPage;
-   const pageProducts = filteredProducts.slice(start, end);
-   pageProducts.forEach((product, index) => {
-       const row = document.createElement("tr");
-       const now = new Date();
-       const expParts = product.expirationTime.split('/');
-       const expirationDate = new Date(`${expParts[2]}-${expParts[0]}-${expParts[1]}`);
-       const timeDiff = expirationDate.getTime() - now.getTime();
-       const daysToExpire = Math.ceil(timeDiff / (1000 * 3600 * 24));
-       let expirationClass = "";
-       if (daysToExpire < 0) {
-           expirationClass = "expired";
-       } else if (daysToExpire <= 15) {
-           expirationClass = "expiring-soon";
-       } else {
-           expirationClass = "valid";
-       }
-       // 计算序号
-       const serialNumber = start + index + 1;
-       row.innerHTML = `
-<td><input type="checkbox" class="multi-select-checkbox" value="${index + start}"></td>
-<td>${serialNumber}</td>
-<td>${product.productID}</td>
-<td>${product.productType}</td>
-<td>${product.quantity}</td>
-<td class="${expirationClass}">${product.expirationTime}</td>
-<td>${product.productBatchID}</td>
-<td>${product.username}</td>
-<td>${product.location}</td>
-<td>${product.addedDate}</td>
-<td class="actions">
-<button onclick="editProduct(${index + start})">Edit</button>
-<button onclick="confirmDelete(${index + start})">Delete</button>
-</td>
-       `;
-       tbody.appendChild(row);
-   });
-   renderPagination(totalPages);
+    const tbody = document.querySelector("#productList tbody");
+    tbody.innerHTML = "";
+    const filteredProducts = products.filter(filterProducts);
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    currentPage = Math.min(currentPage, totalPages);
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageProducts = filteredProducts.slice(start, end);
+
+    pageProducts.forEach((product, index) => {
+        const row = document.createElement("tr");
+        const now = new Date();
+        const expParts = product.expirationTime.split('/');
+        const expirationDate = new Date(`${expParts[2]}-${expParts[0]}-${expParts[1]}`);
+        const timeDiff = expirationDate.getTime() - now.getTime();
+        const daysToExpire = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        let expirationClass = "";
+        if (daysToExpire < 0) {
+            expirationClass = "expired";
+        } else if (daysToExpire <= 15) {
+            expirationClass = "expiring-soon";
+        } else {
+            expirationClass = "valid";
+        }
+
+        // 计算序号
+        const serialNumber = start + index + 1;
+        row.innerHTML = `
+            <td><input type="checkbox" class="multi-select-checkbox" value="${index + start}"></td>
+            <td>${serialNumber}</td>
+            <td>${product.productID}</td>
+            <td>${product.productType}</td>
+            <td>${product.quantity}</td>
+            <td class="${expirationClass}">${product.expirationTime}</td>
+            <td>${product.productBatchID}</td>
+            <td>${product.username}</td>
+            <td>${product.location}</td>
+            <td>${product.addedDate}</td>
+            <td class="actions">
+                <button onclick="editProduct(${index + start})">Edit</button>
+                <button onclick="confirmDelete(${index + start})">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    renderPagination(totalPages);
 }
+
 function saveToLocalStorage() {
-   localStorage.setItem('products', JSON.stringify(products));
+    localStorage.setItem('products', JSON.stringify(products));
 }
         function editProduct(index) {
             currentEditIndex = index;
