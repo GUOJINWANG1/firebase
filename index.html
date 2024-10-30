@@ -331,46 +331,61 @@
         <button onclick="cancelAction()">No</button>
     </div>
     <body>
-    <script type="module">
-       // Import the functions you need from the SDKs you need
-       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-       import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
-       import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-       import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-       // Your web app's Firebase configuration
-       const firebaseConfig = {
-           apiKey: "AIzaSyDACgpDZcWXmQVvm13OxXxdBGrwISJWqEo",
-           authDomain: "materials-420d0.firebaseapp.com",
-           databaseURL: "https://materials-420d0-default-rtdb.asia-southeast1.firebasedatabase.app",
-           projectId: "materials-420d0",
-           storageBucket: "materials-420d0.appspot.com",
-           messagingSenderId: "1023899248303",
-           appId: "1:1023899248303:web:d712f818c1aec95857165a",
-           measurementId: "G-JPR2F15NS1"
+   <script type="module">
+   // Import the functions you need from the SDKs you need
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+   import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+   import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+   // Your web app's Firebase configuration
+   const firebaseConfig = {
+       apiKey: "AIzaSyDACgpDZcWXmQVvm13OxXxdBGrwISJWqEo",
+       authDomain: "materials-420d0.firebaseapp.com",
+       databaseURL: "https://materials-420d0-default-rtdb.asia-southeast1.firebasedatabase.app",
+       projectId: "materials-420d0",
+       storageBucket: "materials-420d0.appspot.com",
+       messagingSenderId: "1023899248303",
+       appId: "1:1023899248303:web:d712f818c1aec95857165a",
+       measurementId: "G-JPR2F15NS1"
+   };
+   // Initialize Firebase
+   const app = initializeApp(firebaseConfig);
+   const analytics = getAnalytics(app);
+   // Initialize Firebase Auth and sign in anonymously
+   const auth = getAuth();
+   signInAnonymously(auth)
+       .then(() => {
+           console.log("Signed in anonymously");
+       })
+       .catch((error) => {
+           console.error("Error signing in anonymously:", error);
+       });
+   // Initialize Firebase Database
+   const database = getDatabase(app);
+   // Function to save product data to the database
+   function saveProductData() {
+       const productData = {
+           productID: "12345",
+           productType: "Sample Type",
+           quantity: 100,
+           expirationTime: "12/31/2024",
+           productBatchID: "Batch001",
+           username: "User123",
+           location: "Warehouse A",
+           addedDate: new Date().toISOString() // Current date and time
        };
-       // Initialize Firebase
-       const app = initializeApp(firebaseConfig);
-       const analytics = getAnalytics(app);
-       // Initialize Firebase Auth and sign in anonymously
-       const auth = getAuth();
-       signInAnonymously(auth)
+       // Use productID as a unique key for each entry
+       const dbRef = ref(database, 'products/' + productData.productID);
+       set(dbRef, productData)
            .then(() => {
-               console.log("Signed in anonymously");
+               console.log("Product data written to database successfully");
            })
            .catch((error) => {
-               console.error("Error signing in anonymously:", error);
+               console.error("Error writing product data to database:", error);
            });
-       // Initialize Firebase Database and write some data
-       const database = getDatabase(app);
-       const dbRef = ref(database, 'sampleData/');
-       set(dbRef, {
-           exampleKey: "exampleValue"
-       }).then(() => {
-           console.log("Data written to database");
-       }).catch((error) => {
-           console.error("Error writing to database:", error);
-       });
-       
+   }
+   // Call the function to save data
+   saveProductData();
 </script>
 </body>
 </html>
